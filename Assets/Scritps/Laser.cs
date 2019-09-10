@@ -4,15 +4,17 @@ public class Laser: MonoBehaviour {
     [SerializeField]
     private float _speed = 10.0f;
     [SerializeField]
-    private bool _isMovinDown;
+    private bool isEnemyLaser;
 
+      // This line is only yo avoid errors
+    private const string ENEMY = "Enemy", LASER = "Laser", PLAYER = "Player";
 
     void Start() {
     }
     void Update() {
 
-          Debug.Log("Update: " + _isMovinDown);
-        if (_isMovinDown == false) {
+          Debug.Log("Update: " + isEnemyLaser);
+        if (isEnemyLaser == false) {
             MoveUp();
         }
         else {
@@ -40,7 +42,23 @@ public class Laser: MonoBehaviour {
     }
 
     internal void AssignEnemyLaser(){
-        _isMovinDown = true;
-        Debug.Log("AssignEnemyLaser: " + _isMovinDown);
+        isEnemyLaser = true;
+    }
+
+      private void OnTriggerEnter2D(Collider2D other) {
+
+        if (other.tag == PLAYER && isEnemyLaser == true) {
+
+            Player player = other.GetComponent<Player>() ?? null;
+
+            player.TakeDamage();
+        }
+         else if (other.tag == ENEMY && isEnemyLaser != true) {
+
+            Debug.Log("Enemy laser, friendly fire");
+
+            return;
+          
+        }
     }
 }
