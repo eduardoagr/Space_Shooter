@@ -6,14 +6,14 @@ public class Laser: MonoBehaviour {
     [SerializeField]
     private bool isEnemyLaser;
 
-      // This line is only yo avoid errors
+    // This line is only yo avoid errors
     private const string ENEMY = "Enemy", LASER = "Laser", PLAYER = "Player";
 
     void Start() {
     }
     void Update() {
 
-          Debug.Log("Update: " + isEnemyLaser);
+        Debug.Log("Update: " + isEnemyLaser);
         if (isEnemyLaser == false) {
             MoveUp();
         }
@@ -41,11 +41,11 @@ public class Laser: MonoBehaviour {
         }
     }
 
-    internal void AssignEnemyLaser(){
+    internal void AssignEnemyLaser() {
         isEnemyLaser = true;
     }
 
-      private void OnTriggerEnter2D(Collider2D other) {
+    private void OnTriggerEnter2D(Collider2D other) {
 
         if (other.tag == PLAYER && isEnemyLaser == true) {
 
@@ -53,12 +53,12 @@ public class Laser: MonoBehaviour {
 
             player.TakeDamage();
         }
-         else if (other.tag == ENEMY && isEnemyLaser != true) {
+        else if (other.tag == ENEMY && isEnemyLaser != true) {
 
             Debug.Log("Enemy laser, friendly fire");
 
             return;
-          
+
         }
     }
 }
