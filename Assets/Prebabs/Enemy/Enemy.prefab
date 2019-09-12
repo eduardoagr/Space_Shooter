@@ -48,10 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3d907d0edd5bdb48bd99b475daff5ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
   _audioSource: {fileID: 173361712}
   _enemyLaser: {fileID: 7884165874466539782, guid: 2ca7243830f42da4ba4bf4f42efd9648,
     type: 3}
+  _EnemyLaseContainer: {fileID: 0}
 --- !u!212 &8732678498573914319
 SpriteRenderer:
   m_ObjectHideFlags: 0

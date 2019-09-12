@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+
 using UnityEngine;
 
 public class Player: MonoBehaviour {
@@ -14,69 +15,118 @@ public class Player: MonoBehaviour {
     [SerializeField]
     private GameObject _leftWing, _rigthWing;
     [SerializeField]
+    private GameObject _explosonPrefab;
+    [SerializeField]
     private AudioSource _audioSource;
     [SerializeField]
     private AudioClip _laserClip;
     [SerializeField]
+    private bool _isPlayerOne;
+    [SerializeField]
+    private bool _isPlayerTwo;
     private float _speed = 8f;
     private float _fireSpeed = 0.25f;
     private float _canFire = -1f;
     private int _lives = 3;
-    private bool isTripleShotActive = false;
-    private bool isSpeedBostActive = false;
-    private bool isShieldsActive = false;
+    private bool isTripleShotActive;
+    private bool isSpeedBostActive;
+    private bool isShieldsActive;
     private int _score;
     // Because I do not have a collision, I canon grab the object, by accessing "other"
-    private Spawn_Manager Spawn_Manager = null;
-    private UI_Manager UI_Manager = null;
+    private Spawn_Manager spawn_Manager = null;
+    private UI_Manager uI_Manager = null;
+    private GameManager gameManager = null;
+    private Animator animator;
 
-    // Start is called before the first frame update
-    void Start() {
-        transform.position = new Vector3(0, 0, 0);
+    const string CANVAS = "Canvas", SPAWNMANAGER = "Spawn_Manager", GAMEMANAGER = "Game_Manager";
 
-        Spawn_Manager = GameObject.Find("Spawn_Manager").GetComponent<Spawn_Manager>();
-        UI_Manager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
+    void Awake() {
+        spawn_Manager = GameObject.Find(SPAWNMANAGER).GetComponent<Spawn_Manager>() ?? null;
+        uI_Manager = GameObject.Find(CANVAS).GetComponent<UI_Manager>() ?? null;
+        gameManager = GameObject.Find(GAMEMANAGER).GetComponent<GameManager>() ?? null;
         _audioSource = GetComponent<AudioSource>() ?? null;
-            
-       _audioSource.clip = _laserClip;
+        animator = GetComponent<Animator>() ?? null;
+        _audioSource.clip = _laserClip;
+
+        if (!gameManager.CoopMode()) {
+            transform.position = new Vector3(0, 0, 0);
+        }
     }
     // Update is called once per frame
     void Update() {
-        PlayerMovement();
+        Movement();
         Fire();
         PlayerBouds();
     }
 
     private void Fire() {
-        if (Input.GetKey(KeyCode.Space) && Time.time > _canFire) {
-            if (isTripleShotActive) {
-                GameObject tripleShot = Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-                tripleShot.transform.parent = _tripleShotContainer.transform;
+        if (_isPlayerOne) {
+            if (Input.GetKeyDown(KeyCode.Q) && Time.time > _canFire) {
+                if (isTripleShotActive) {
+                    GameObject tripleShot = Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+                    tripleShot.transform.parent = _tripleShotContainer.transform;
+                }
+                _canFire = Time.time + _fireSpeed;
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                _audioSource.Play();
             }
-            _canFire = Time.time + _fireSpeed;
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
-            _audioSource.Play();
+        }
+        if (_isPlayerTwo) {
+            if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire) {
+                if (isTripleShotActive) {
+                    GameObject tripleShot = Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+                    tripleShot.transform.parent = _tripleShotContainer.transform;
+                }
+                _canFire = Time.time + _fireSpeed;
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+                _audioSource.Play();
+            }
         }
     }
 
-    private void PlayerMovement() {
-        float horizontalMovement = Input.GetAxis("Horizontal");
-        float verticalMovement = Input.GetAxis("Vertical");
+    private void Movement() {
 
-        transform.Translate(new Vector3(horizontalMovement, verticalMovement, 0f) * _speed * Time.deltaTime);
+        if (_isPlayerOne) {
+            if (Input.GetKeyDown(KeyCode.W)) {
+                transform.Translate(Vector3.up * _speed * Time.deltaTime);
+            } else if (Input.GetKeyDown(KeyCode.S)) {
+                transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            } else if (Input.GetKeyDown(KeyCode.D)) {
+                //Left animation
+                animator.SetBool("Left", true);
+                transform.Translate(Vector3.right * _speed * Time.deltaTime);
+            } else if (Input.GetKeyDown(KeyCode.A)) {
+                //Right animation
+                animator.SetBool("Right", true);
+                transform.Translate(Vector3.left * _speed * Time.deltaTime);
+              } else {
+                animator.SetBool("Left", false);
+                animator.SetBool("Right", false);
+            }
+        }
+
+        if (_isPlayerTwo) {
+            if (Input.GetKeyDown(KeyCode.UpArrow)) {
+                transform.Translate(Vector3.up * _speed * Time.deltaTime);
+            } else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+                transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            } else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+                transform.Translate(Vector3.right * _speed * Time.deltaTime);
+            } else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+                transform.Translate(Vector3.left * _speed * Time.deltaTime);
+            }
+        }
     }
 
     private void PlayerBouds() {
         if (transform.position.y > 5.95f) {
             transform.position = new Vector3(transform.position.x, 5.95f, 0f);
-        }
-        else if (transform.position.y < -3.98f) {
+        } else if (transform.position.y < -3.98f) {
             transform.position = new Vector3(transform.position.x, -3.98f, 0f);
         }
         if (transform.position.x > 9.2f) {
             transform.position = new Vector3(9.2f, transform.position.y, 0f);
-        }
-        else if (transform.position.x < -9.3f) {
+        } else if (transform.position.x < -9.3f) {
             transform.position = new Vector3(-9.3f, transform.position.y, 0f);
         }
     }
@@ -94,17 +144,17 @@ public class Player: MonoBehaviour {
 
         if (_lives == 2) {
             _leftWing.SetActive(true);
-        }
-        else if (_lives == 1) {
+        } else if (_lives == 1) {
             _rigthWing.SetActive(true);
         }
 
-        UI_Manager?.UpdateLives(_lives);
+        uI_Manager?.UpdateLives(_lives);
 
         if (_lives < 1) {
+            Instantiate(_explosonPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
             // I need to tell the Spawn_Manager, to stop
-            Spawn_Manager?.isPlayerDead(true);
+            spawn_Manager.isPlayerDead(true);
         }
     }
 
@@ -130,7 +180,7 @@ public class Player: MonoBehaviour {
     internal void UpdateScore(int point) {
 
         _score += point;
-        UI_Manager?.UpdateText(_score);
+        uI_Manager.UpdateText(_score);
     }
 
     IEnumerator TripleShotPowerDowRowtine(float time) {

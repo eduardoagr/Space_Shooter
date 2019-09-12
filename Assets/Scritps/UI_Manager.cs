@@ -18,10 +18,10 @@ public class UI_Manager: MonoBehaviour {
     private GameManager _gameManager;
     const string GAMEMANAGER = "Game_Manager";
 
-    // Start is called before the first frame update
-    void Start() {
+    void Awake() {
+
         _scoreText.text = $"Score: {0}";
-        _gameManager = GameObject.Find(GAMEMANAGER).GetComponent<GameManager>();
+        _gameManager = GameObject.Find(GAMEMANAGER).GetComponent<GameManager>() ?? null;
     }
 
     internal void UpdateText(int score) {
@@ -38,10 +38,9 @@ public class UI_Manager: MonoBehaviour {
             GameOverSequence();
         }
     }
-
     private void GameOverSequence() {
 
-        _gameManager?.GameOver(true);
+        _gameManager.GameOver(true);
         _restartGame.gameObject.SetActive(true);
         _gameOverText.gameObject.SetActive(true);
         StartCoroutine(FlickerEffect());
@@ -55,8 +54,5 @@ public class UI_Manager: MonoBehaviour {
             _gameOverText.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.5f);
         }
-
-
-
     }
 }

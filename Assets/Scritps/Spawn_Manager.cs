@@ -26,6 +26,7 @@ public class Spawn_Manager: MonoBehaviour {
         while (_stopSpawning == false) {
             GameObject newEnemy = Instantiate(_enemy, new Vector3(Random.Range(-8.90f, 8.90f), 8f, 0f), Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
+
             yield return new WaitForSeconds(2.0f);
         }
     }
@@ -38,6 +39,7 @@ public class Spawn_Manager: MonoBehaviour {
             int randomPowerUp = Random.Range(0, 2);
             GameObject newEnemy = Instantiate(_powerUps[randomPowerUp], new Vector3(Random.Range(-8.90f, 8.90f), 8f, 0f), Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
+
             yield return new WaitForSeconds(2.0f);
         }
 
@@ -45,11 +47,11 @@ public class Spawn_Manager: MonoBehaviour {
     }
 
 
-    public void isPlayerDead(bool dead) {
+    internal void isPlayerDead(bool dead) {
 
         if (dead) {
 
-            _stopSpawning = dead;
+            _stopSpawning = dead;   
         }
     }
 }

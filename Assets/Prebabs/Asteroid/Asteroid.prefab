@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5786951662967022231}
   m_Layer: 0
   m_Name: Asteroid
-  m_TagString: Untagged
+  m_TagString: Asteroid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,4 +184,4 @@ MonoBehaviour:
   _rotateSpeed: 19
   _explosonPrefab: {fileID: 2607728350003286748, guid: d92c88dd68fc9cc4bb7a28164ae05845,
     type: 3}
-  _asteriodPrefab: {fileID: 5786951662967022234}
+  Spawn_Manager: {fileID: 0}

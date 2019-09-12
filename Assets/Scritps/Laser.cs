@@ -7,19 +7,17 @@ public class Laser: MonoBehaviour {
     private bool isEnemyLaser;
 
     // This line is only yo avoid errors
-    private const string ENEMY = "Enemy", LASER = "Laser", PLAYER = "Player";
+    private const string ENEMY = "Enemy", PLAYER = "Player", ASTEROID = "Asteroid";
 
     void Start() {
     }
     void Update() {
 
-        Debug.Log("Update: " + isEnemyLaser);
         if (isEnemyLaser == false) {
             MoveUp();
         }
         else {
             MoveDown();
-            Debug.Log("Is getting hit");
         }
     }
 
@@ -29,6 +27,10 @@ public class Laser: MonoBehaviour {
         if (transform.position.y > 8.61f && this.gameObject != null) {
 
             Destroy(this.gameObject);
+
+            if (transform.parent != null) {
+                Destroy(transform.parent.gameObject);
+            }
         }
     }
 
@@ -38,11 +40,22 @@ public class Laser: MonoBehaviour {
         if (transform.position.y < -8.61f && this.gameObject != null) {
 
             Destroy(this.gameObject);
+
+            if (transform.parent != null) {
+                Destroy(transform.parent.gameObject);
+            }
         }
     }
 
     internal void AssignEnemyLaser() {
         isEnemyLaser = true;
+    }
+
+    internal bool LaserCheck() {
+        if (isEnemyLaser) {
+            return true;
+        }
+        return false;
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -52,13 +65,6 @@ public class Laser: MonoBehaviour {
             Player player = other.GetComponent<Player>() ?? null;
 
             player.TakeDamage();
-        }
-        else if (other.tag == ENEMY && isEnemyLaser != true) {
-
-            Debug.Log("Enemy laser, friendly fire");
-
-            return;
-
         }
     }
 }

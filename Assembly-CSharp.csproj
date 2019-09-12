@@ -68,10 +68,12 @@
     <Compile Include="Assets\Scritps\GameManager.cs" />
     <Compile Include="Assets\Scritps\Laser.cs" />
     <Compile Include="Assets\Scritps\MainManager.cs" />
+    <Compile Include="Assets\Scritps\MainMenuManager.cs" />
     <Compile Include="Assets\Scritps\Player.cs" />
     <Compile Include="Assets\Scritps\PoweUp.cs" />
     <Compile Include="Assets\Scritps\Spawn_Manager.cs" />
     <Compile Include="Assets\Scritps\UI_Manager.cs" />
+    <None Include="Assets\Sprites\MainMenu\SF UI\Background\LICENSE.txt" />
     <None Include="Assets\Materials\Shaders\Galaxy.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/ed/Documents/Unity/Space Shooter pro/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
