@@ -93,11 +93,11 @@ public class Player: MonoBehaviour {
                 transform.Translate(Vector3.down * _speed * Time.deltaTime);
             } else if (Input.GetKeyDown(KeyCode.D)) {
                 //Left animation
-                animator.SetBool("Left", true);
+                animator.SetBool("Right", true);
                 transform.Translate(Vector3.right * _speed * Time.deltaTime);
             } else if (Input.GetKeyDown(KeyCode.A)) {
                 //Right animation
-                animator.SetBool("Right", true);
+                animator.SetBool("Left", true);
                 transform.Translate(Vector3.left * _speed * Time.deltaTime);
               } else {
                 animator.SetBool("Left", false);
